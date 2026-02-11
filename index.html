@@ -526,11 +526,202 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            background: #2c2c2c;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
+        }
+
+        /* RStudio-like Interface */
+        .rstudio-window {
+            width: 95%;
+            height: 90vh;
+            background: #2c2c2c;
+            border: 1px solid #4d4d4d;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            font-family: 'Courier New', monospace;
+        }
+
+        .rstudio-header {
+            background: linear-gradient(to bottom, #4a90d9 0%, #3a7bc8 100%);
+            color: white;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 1px solid #2a6bb0;
+        }
+
+        .rstudio-logo {
+            font-size: 18px;
+        }
+
+        .rstudio-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .rstudio-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #4d4d4d;
+        }
+
+        .rstudio-right {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rstudio-panel {
+            background: #1e1e1e;
+            border-bottom: 1px solid #4d4d4d;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rstudio-panel-header {
+            background: #2c2c2c;
+            color: #d4d4d4;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-bottom: 1px solid #4d4d4d;
+            font-weight: 600;
+        }
+
+        .rstudio-panel-content {
+            padding: 12px;
+            overflow-y: auto;
+            flex: 1;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #d4d4d4;
+        }
+
+        .rstudio-console {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rstudio-console-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .rstudio-console-content p {
+            margin: 0;
+            padding: 2px 0;
+            color: #d4d4d4;
+            font-size: 13px;
+        }
+
+        .rstudio-console-content .r-output {
+            color: #569cd6;
+        }
+
+        .rstudio-console-content .r-error {
+            color: #f48771;
+        }
+
+        .rstudio-console-content .r-comment {
+            color: #6a9955;
+        }
+
+        .rstudio-console-input {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: #1e1e1e;
+            border-top: 1px solid #4d4d4d;
+        }
+
+        .rstudio-prompt {
+            color: #569cd6;
+            margin-right: 8px;
+            font-weight: bold;
+        }
+
+        .rstudio-console-input input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .rstudio-script {
+            flex: 1;
+            background: #1e1e1e;
+            padding: 12px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #d4d4d4;
+        }
+
+        .rstudio-script-line {
+            margin: 2px 0;
+        }
+
+        .rstudio-script .keyword {
+            color: #c586c0;
+        }
+
+        .rstudio-script .function {
+            color: #dcdcaa;
+        }
+
+        .rstudio-script .string {
+            color: #ce9178;
+        }
+
+        .rstudio-script .number {
+            color: #b5cea8;
+        }
+
+        .rstudio-script .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+
+        .rstudio-environment {
+            flex: 1;
+        }
+
+        .rstudio-env-item {
+            padding: 4px 0;
+            font-size: 12px;
+            color: #d4d4d4;
+        }
+
+        .rstudio-env-name {
+            color: #569cd6;
+            font-weight: 600;
+        }
+
+        .rstudio-files {
+            flex: 1;
+        }
+
+        .rstudio-file-item {
+            padding: 4px 0;
+            font-size: 12px;
+            color: #d4d4d4;
         }
 
         #maus-pm-modal {
@@ -743,21 +934,68 @@
         </div>
     </div>
     <div id="r-cli-modal" class="hidden">
-        <div class="terminal-window">
-            <div class="terminal-text" id="r-terminal-content">
-                <p>> library(love)</p>
-                <p style="color: #00ff00;">-- entering r environment --</p>
-                <p style="color: #00ff00;">type help() for commands</p>
+        <div class="rstudio-window">
+            <div class="rstudio-header">
+                <span class="rstudio-logo">📊</span>
+                <span>RStudio - Love Analytics</span>
             </div>
-            <div class="terminal-input-section" id="r-input-section">
-                <p id="r-prompt">> </p>
-                <input 
-                    type="text" 
-                    id="r-input" 
-                    autocomplete="off"
-                    placeholder=""
-                    onkeypress="handleRInput(event)"
-                >
+            <div class="rstudio-body">
+                <div class="rstudio-left">
+                    <div class="rstudio-panel" style="flex: 1;">
+                        <div class="rstudio-panel-header">💘 love_script.R</div>
+                        <div class="rstudio-script" id="r-script-content">
+                            <div class="rstudio-script-line"><span class="comment"># Welcome to the Love Analytics Challenge! 💕</span></div>
+                            <div class="rstudio-script-line"><span class="comment"># Your mission: Analyze our relationship data</span></div>
+                            <div class="rstudio-script-line"></div>
+                            <div class="rstudio-script-line"><span class="comment"># Step 1: Load the romantic dataset</span></div>
+                            <div class="rstudio-script-line"><span class="keyword">library</span>(<span class="string">"love"</span>)</div>
+                            <div class="rstudio-script-line"><span class="function">load_heart_data</span>()</div>
+                            <div class="rstudio-script-line"></div>
+                            <div class="rstudio-script-line"><span class="comment"># Step 2: Explore the relationship patterns</span></div>
+                            <div class="rstudio-script-line"><span class="comment"># Hint: What connects two hearts? 🤔</span></div>
+                        </div>
+                    </div>
+                    <div class="rstudio-panel rstudio-console">
+                        <div class="rstudio-panel-header">Console</div>
+                        <div class="rstudio-console-content" id="r-terminal-content">
+                            <p>> <span class="keyword">library</span>(love)</p>
+                            <p class="r-comment">✨ Welcome to Love Analytics v1.0 ✨</p>
+                            <p class="r-comment">💕 Type commands in the console below 💕</p>
+                            <p class="r-comment">💡 Hint: Start with load_heart_data()</p>
+                        </div>
+                        <div class="rstudio-console-input">
+                            <span class="rstudio-prompt">></span>
+                            <input 
+                                type="text" 
+                                id="r-input" 
+                                autocomplete="off"
+                                placeholder=""
+                                onkeypress="handleRInput(event)"
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="rstudio-right">
+                    <div class="rstudio-panel rstudio-environment">
+                        <div class="rstudio-panel-header">Environment</div>
+                        <div class="rstudio-panel-content" id="r-environment">
+                            <div class="rstudio-env-item">
+                                <span class="rstudio-env-name">user</span>: "<span id="r-user-name">maus</span>"
+                            </div>
+                            <div class="rstudio-env-item">
+                                <span class="rstudio-env-name">session</span>: "valentine_2026"
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rstudio-panel rstudio-files">
+                        <div class="rstudio-panel-header">Files</div>
+                        <div class="rstudio-panel-content">
+                            <div class="rstudio-file-item">📄 love_script.R</div>
+                            <div class="rstudio-file-item">📊 heart_data.csv</div>
+                            <div class="rstudio-file-item">💌 love_letter.txt</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -866,6 +1104,7 @@ With all my love,
         let currentLevel = 0;
         let huntInitialized = false;
         let rstudioInstalled = false;
+        let username = '';
 
         // Initialize the page
         function init() {
@@ -1005,10 +1244,19 @@ With all my love,
             }
         }
 
-        function showTerminalAuthentication(username) {
+        function showTerminalAuthentication(user) {
+            // Store username
+            username = user;
+            
             // Show terminal modal
             document.getElementById('terminal-modal').classList.remove('hidden');
-            document.getElementById('terminal-username').textContent = username;
+            document.getElementById('terminal-username').textContent = user;
+            
+            // Update R user name if element exists
+            const rUserElement = document.getElementById('r-user-name');
+            if (rUserElement) {
+                rUserElement.textContent = user;
+            }
             
             // After loading bar completes (2 seconds), show prompt
             setTimeout(() => {
@@ -1100,16 +1348,34 @@ try 'maus help' for available commands`;
   help          - show this help message
   whoami        - display current user
   date          - show current date and time
+  pwd           - print working directory
+  ls            - list files
+  uname         - system information
   clear         - clear terminal
   clue          - get a hint
   maus          - package manager (try 'maus help')`;
                     if (rstudioInstalled) {
-                        helpText += `\n  r             - enter r environment`;
+                        helpText += `\n  r             - launch rstudio environment`;
                     }
                     response = helpText;
                 } else if (input === 'whoami') {
                     const username = document.getElementById('terminal-username').textContent;
                     response = username;
+                } else if (input === 'pwd') {
+                    const username = document.getElementById('terminal-username').textContent;
+                    response = '/home/' + username + '/valentine';
+                } else if (input === 'ls' || input === 'ls -la' || input === 'dir') {
+                    const username = document.getElementById('terminal-username').textContent;
+                    response = `total 3
+drwxr-xr-x  2 ${username}  ${username}  4096 Feb 14 12:00 .
+drwxr-xr-x  5 ${username}  ${username}  4096 Feb 14 11:30 ..
+-rw-r--r--  1 ${username}  ${username}  1337 Feb 14 12:00 love_letter.txt
+-rw-r--r--  1 ${username}  ${username}   420 Feb 14 11:45 heart_data.csv
+💕 romantic files detected!`;
+                } else if (input === 'uname' || input === 'uname -a') {
+                    const username = document.getElementById('terminal-username').textContent;
+                    response = `LoveOS 14.2 Valentine-Edition x86_64
+Built with ❤️ for ${username}`;
                 } else if (input === 'date') {
                     response = new Date().toString();
                 } else if (input === 'clear') {
@@ -1164,9 +1430,15 @@ type 'help' for available commands`;
         }
 
 
+        // R challenge state
+        let rChallengeStep = 0;
+        let heartData = null;
+        let correlationCalculated = false;
+
         function handleRInput(event) {
             if (event.key === 'Enter') {
-                const input = document.getElementById('r-input').value.toLowerCase().trim();
+                const input = document.getElementById('r-input').value.trim();
+                const inputLower = input.toLowerCase();
                 const content = document.getElementById('r-terminal-content');
                 
                 if (!input) {
@@ -1177,65 +1449,129 @@ type 'help' for available commands`;
                 // Add user input
                 const userLine = document.createElement('p');
                 userLine.textContent = '> ' + input;
-                userLine.style.color = '#00ff00';
+                userLine.style.color = '#d4d4d4';
                 content.appendChild(userLine);
                 
                 // Process R commands
                 let response = '';
+                let responseClass = 'r-output';
                 let shouldProgress = false;
                 
-                if (input === 'help()') {
-                    response = `[1] "available functions:"
-[1] "glm() - fit logistic regression model"
-[1] "data() - load sample relationship data"
-[1] "summary(model) - see model results"
-[1] "predict() - make predictions"
-[1] "reveal_love() - unlock the finale"`;
-                } else if (input === 'data()') {
-                    response = `data frame loaded: 'love_data'
--- sample rows --
-  probability chance_of_love
-1        0.92            yes
-2        0.87            yes
-3        0.95            yes`;
-                } else if (input === 'glm(chance_of_love~., family=binomial)') {
-                    response = `call: glm(chance_of_love~., family=binomial)
-coefficients:
-(intercept)    -8.452
-probability    18.234
+                if (inputLower === 'help()' || inputLower === '?') {
+                    response = `Available functions:
+  load_heart_data()    - Load the romantic dataset
+  summary(data)        - View data summary
+  names(data)          - View variable names
+  plot_hearts()        - Visualize the relationship
+  find_correlation()   - Calculate love correlation
+  unlock_heart()       - Complete the challenge (requires correlation)
+  
+💡 Tip: Start by loading the data!`;
+                    responseClass = 'r-comment';
+                } else if (inputLower === 'load_heart_data()' || inputLower === 'load_heart_data') {
+                    heartData = true;
+                    rChallengeStep = 1;
+                    updateREnvironment('heart_data', 'data.frame [5 × 3]');
+                    response = `✓ Loaded heart_data.csv
+A romantic dataset with 5 observations of 3 variables:
+  - date: Special moments together
+  - happiness: Your happiness level (0-10)
+  - love_score: Connection strength (0-100)
 
-null deviance: 83.178
-residual deviance: 0.002`;
-                } else if (input === 'summary(model)') {
-                    response = `call: glm(chance_of_love~., family=binomial)
-deviance residuals:
-     min       1q   median       3q      max
- -0.0089  -0.0071  -0.0045   0.0064   0.0092
+💕 Type summary(heart_data) to see the details!`;
+                    responseClass = 'r-output';
+                } else if (inputLower === 'summary(heart_data)' && heartData) {
+                    rChallengeStep = Math.max(rChallengeStep, 2);
+                    response = `     date             happiness    love_score
+ "2024-02-14"     Min:   7.0    Min:   78.0
+ "2024-05-20"     1st Qu:8.0    1st Qu:82.0
+ "2024-08-15"     Median:9.0    Median:91.0
+ "2025-11-01"     Mean:  8.6    Mean:  88.6
+ "2026-02-14"     3rd Qu:9.5    3rd Qu:95.0
+                  Max:  10.0    Max:   99.0
 
-coefficients:
-                estimate  std.error  z value  pr(>|z|)
-(intercept)     -8.4521     2.1203   -3.988    0.000067
-probability     18.2341     4.5632    3.995    0.000064`;
-                } else if (input === 'i_love_you()') {
-                    response = `[1] "you complete my model perfectly <3"`;
+💡 Notice anything? Try plot_hearts() to visualize!`;
+                    responseClass = 'r-output';
+                } else if (inputLower === 'names(heart_data)' && heartData) {
+                    response = `[1] "date"        "happiness"   "love_score"
+
+💡 Three variables capturing our journey together!`;
+                    responseClass = 'r-output';
+                } else if ((inputLower === 'plot_hearts()' || inputLower === 'plot_hearts') && heartData) {
+                    rChallengeStep = Math.max(rChallengeStep, 3);
+                    response = `
+    💕 Love Score vs Happiness 💕
+  100|                      ❤️
+     |                   ❤️
+   90|              ❤️
+     |           ❤️
+   80|        ❤️
+     |
+   70|_________________________
+      7    8    9    10
+           Happiness
+
+✨ Perfect positive relationship! 
+💡 Try find_correlation() to quantify this!`;
+                    responseClass = 'r-output';
+                } else if ((inputLower === 'find_correlation()' || inputLower === 'find_correlation' || 
+                           inputLower === 'cor(heart_data$happiness, heart_data$love_score)') && heartData) {
+                    correlationCalculated = true;
+                    rChallengeStep = Math.max(rChallengeStep, 4);
+                    updateREnvironment('correlation', '0.997');
+                    response = `
+💕 Correlation Analysis 💕
+
+cor(happiness, love_score) = 0.997
+
+This means: As your happiness grows, our love 
+score increases almost perfectly! 
+
+Statistical interpretation:
+ - Correlation: 0.997 (nearly perfect!)
+ - p-value: < 0.001 (highly significant!)
+ - R²: 0.994 (99.4% of variation explained!)
+
+✨ You've discovered the secret pattern! ✨
+💌 Now use unlock_heart() to reveal the finale!`;
+                    responseClass = 'r-output';
+                } else if ((inputLower === 'unlock_heart()' || inputLower === 'unlock_heart') && correlationCalculated) {
+                    response = `
+🔓 Unlocking the heart...
+
+The correlation reveals the truth:
+  When you smile, my world lights up.
+  When you're happy, my love grows stronger.
+  We are perfectly correlated. 💕
+
+[1] "You've completed the Love Analytics Challenge!"
+[1] "Preparing the final surprise..."`;
+                    responseClass = 'r-output';
                     shouldProgress = true;
-                } else if (input === 'quit()' || input === 'q()') {
+                } else if ((inputLower === 'unlock_heart()' || inputLower === 'unlock_heart') && !correlationCalculated) {
+                    response = `Error: Heart still locked! 🔒
+Hint: You need to find_correlation() first!`;
+                    responseClass = 'r-error';
+                } else if (inputLower === 'quit()' || inputLower === 'q()') {
                     document.getElementById('r-cli-modal').classList.add('hidden');
                     document.getElementById('terminal-modal').classList.remove('hidden');
                     document.getElementById('terminal-input').focus();
                     return;
+                } else if (!heartData) {
+                    response = `Error: No data loaded!
+💡 Try load_heart_data() first to begin the challenge`;
+                    responseClass = 'r-error';
                 } else {
-                    response = `error in eval(expr, envir, enclos) : object '${input}' not found
-type help() for available functions`;
+                    response = `Error in eval(expr): object '${input}' not found
+Type help() to see available functions`;
+                    responseClass = 'r-error';
                 }
                 
                 // Add response
                 if (response) {
                     const responseLine = document.createElement('p');
-                    responseLine.textContent = response;
-                    responseLine.style.color = '#00ff00';
-                    responseLine.style.whiteSpace = 'pre-wrap';
-                    responseLine.style.fontSize = '12px';
+                    responseLine.innerHTML = response.replace(/\n/g, '<br>');
+                    responseLine.className = responseClass;
                     content.appendChild(responseLine);
                 }
                 
@@ -1252,9 +1588,17 @@ type help() for available functions`;
                     setTimeout(() => {
                         document.getElementById('r-cli-modal').classList.add('hidden');
                         showFinale();
-                    }, 1000);
+                    }, 2000);
                 }
             }
+        }
+
+        function updateREnvironment(varName, varValue) {
+            const envContent = document.getElementById('r-environment');
+            const newItem = document.createElement('div');
+            newItem.className = 'rstudio-env-item';
+            newItem.innerHTML = `<span class="rstudio-env-name">${varName}</span>: ${varValue}`;
+            envContent.appendChild(newItem);
         }
 
         function handleKeyPress(event) {
@@ -1302,6 +1646,11 @@ type help() for available functions`;
 
         // Finale logic
         function showFinale() {
+            // Hide other states
+            document.getElementById('hunt-state').classList.remove('active');
+            document.getElementById('countdown-state').classList.remove('active');
+            
+            // Show finale
             document.getElementById('finale-state').classList.add('active');
             triggerConfetti();
         }
