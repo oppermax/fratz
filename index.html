@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Valentine's Scavenger Hunt 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(to bottom, #fdf8f5 0%, #faf5f1 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: #5a4a52;
+            letter-spacing: 0.2px;
+        }
+
+        /* Floating hearts background */
+        @keyframes float {
+            0% { 
+                opacity: 0.85;
+            }
+            100% { 
+                opacity: 0.85;
+            }
+        }
+
+        .heart-float {
+            position: fixed;
+            font-size: 1.2rem;
+            pointer-events: none;
+            animation: float linear forwards;
+            will-change: transform, opacity;
+        }
+
+        /* Container */
+        .container {
+            width: 90%;
+            max-width: 520px;
+            background: white;
+            border-radius: 24px;
+            padding: 50px 40px;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            animation: slideIn 0.6s ease;
+            border: 1px solid rgba(200, 150, 160, 0.15);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #8b6b76;
+            margin-bottom: 16px;
+            font-size: 2.8rem;
+            font-weight: 700;
+            font-family: 'Fredoka', sans-serif;
+            letter-spacing: 0px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            color: #8b6b76;
+            margin-bottom: 24px;
+            font-size: 1.9rem;
+            font-weight: 600;
+            font-family: 'Fredoka', sans-serif;
+            letter-spacing: 0px;
+        }
+
+        p {
+            color: #8b8080;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        /* ========== STATE 1: COUNTDOWN ========== */
+        #countdown-state {
+            display: none;
+        }
+
+        #countdown-state.active {
+            display: block;
+        }
+
+        .countdown-timer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 35px 0;
+        }
+
+        .time-unit {
+            background: #fef5f0;
+            color: #8b6b76;
+            padding: 22px 16px;
+            border-radius: 14px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            border: 1px solid rgba(200, 150, 160, 0.2);
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8b8080;
+        }
+
+        .wait-message {
+            font-size: 1.3rem;
+            color: #8b6b76;
+            margin-top: 32px;
+            animation: pulse 3s infinite;
+            font-weight: 500;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ========== STATE 2: SCAVENGER HUNT ========== */
+        #hunt-state {
+            display: none;
+        }
+
+        #hunt-state.active {
+            display: block;
+        }
+
+        .level-container {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .level-container.fade-out {
+            animation: fadeOut 0.6s ease;
+        }
+
+        .question {
+            background: #fefbf9;
+            color: #7a6b6f;
+            padding: 28px;
+            border-radius: 14px;
+            margin: 28px 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            border: 1px solid rgba(200, 150, 160, 0.2);
+            line-height: 1.6;
+        }
+
+        .input-group {
+            margin: 28px 0;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            border: 1.5px solid #e8ddd9;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+            background: #fefbf9;
+            color: #5a4a52;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #8b6b76;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(139, 107, 118, 0.1);
+        }
+
+        button {
+            background: #c9929d;
+            color: white;
+            border: none;
+            padding: 14px 36px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        button:hover {
+            background: #b8818c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 107, 118, 0.2);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            color: #a87b7b;
+            margin-top: 10px;
+            font-weight: 500;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .level-indicator {
+            color: #8b8080;
+            font-weight: 500;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ========== STATE 3: GRAND FINALE ========== */
+        #finale-state {
+            display: none;
+        }
+
+        #finale-state.active {
+            display: block;
+        }
+
+        .romantic-card {
+            background: linear-gradient(135deg, #fefbf9 0%, #fef5f0 100%);
+            border: 1px solid rgba(200, 150, 160, 0.25);
+            border-radius: 20px;
+            padding: 44px;
+            animation: cardEntrance 0.8s ease;
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .card-title {
+            font-size: 2.4rem;
+            color: #8b6b76;
+            margin-bottom: 28px;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0px;
+        }
+
+        .card-letter {
+            text-align: left;
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            margin: 28px 0;
+            line-height: 1.8;
+            color: #6b6b6b;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(200, 150, 160, 0.15);
+            font-size: 0.98rem;
+            letter-spacing: 0.2px;
+        }
+
+        .card-letter::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card-letter::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .card-letter::-webkit-scrollbar-thumb {
+            background: #c9929d;
+            border-radius: 10px;
+        }
+
+        .hug-button {
+            background: #c9929d;
+            padding: 16px 44px;
+            font-size: 1rem;
+            margin-top: 28px;
+            font-weight: 500;
+        }
+
+        .hug-button:hover {
+            background: #b8818c;
+            transform: translateY(-2px);
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti-active {
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            .countdown-timer {
+                gap: 10px;
+            }
+
+            .time-unit {
+                padding: 12px;
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .question {
+                font-size: 1.1rem;
+            }
+
+            button {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+
+            .card-letter {
+                max-height: 250px;
+            }
+        }
+
+        /* Hide/Show states */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Windows XP Error Modal */
+        #xp-error-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .xp-error-window {
+            width: 340px;
+            background: #ecebeb;
+            border: 2px solid;
+            border-color: #dfdfdf #808080 #808080 #dfdfdf;
+            box-shadow: 1px 1px 0 #ffffff inset, -1px -1px 0 #808080;
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+            font-size: 11px;
+        }
+
+        .xp-title-bar {
+            background: linear-gradient(to right, #000080, #1084d7);
+            color: white;
+            padding: 2px 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .xp-close-btn {
+            background: linear-gradient(135deg, #f0f0f0, #d0d0d0);
+            border: 1px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            width: 16px;
+            height: 14px;
+            padding: 0;
+            font-size: 10px;
+            color: black;
+            cursor: pointer;
+        }
+
+        .xp-close-btn:active {
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+
+        .xp-error-content {
+            padding: 8px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .xp-error-icon {
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .xp-error-text {
+            flex: 1;
+        }
+
+        .xp-error-text p {
+            margin: 0 0 4px 0;
+            line-height: 1.4;
+            color: #000;
+        }
+
+        .xp-error-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 4px;
+            padding: 4px 8px;
+            border-top: 1px solid #c0c0c0;
+            background: #f0f0f0;
+        }
+
+        .xp-error-buttons button {
+            background: linear-gradient(135deg, #f0f0f0, #d0d0d0);
+            border: 1px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            padding: 4px 12px;
+            font-size: 11px;
+            min-width: 50px;
+            cursor: pointer;
+            color: black;
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+        }
+
+        .xp-error-buttons button:active {
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+
+        /* Windows XP/Fallout Terminal Style */
+        #terminal-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #r-cli-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #maus-pm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .terminal-window {
+            width: 90%;
+            max-width: 600px;
+            background: #001100;
+            border: 3px solid #00ff00;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 10px #00ff00;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .terminal-text {
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .terminal-text p {
+            margin: 8px 0;
+            color: #00ff00;
+        }
+
+        .terminal-text .username {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .terminal-loading {
+            margin: 20px 0;
+        }
+
+        .loading-bar-container {
+            width: 100%;
+            height: 20px;
+            border: 2px solid #00ff00;
+            background: #000;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            background: #00ff00;
+            width: 0%;
+            animation: loadingProgress 2s linear forwards;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        @keyframes loadingProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .terminal-status {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #00ff00;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .terminal-input-section {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        #terminal-prompt {
+            color: #00ff00;
+            margin: 0;
+            margin-right: 5px;
+            font-size: 13px;
+        }
+
+        #terminal-input {
+            flex: 1;
+            background: #001100 !important;
+            border: none !important;
+            color: #00ff00 !important;
+            font-family: 'Courier New', monospace !important;
+            font-size: 13px !important;
+            outline: none !important;
+            padding: 0 !important;
+        }
+
+        .success-pulse {
+            animation: successPulse 0.6s ease;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Terminal Authentication Modal -->
+    <div id="terminal-modal" class="hidden">
+        <div class="terminal-window">
+            <div class="terminal-text" id="terminal-content">
+                <p>> initializing authentication sequence...</p>
+                <p>> username: <span class="username" id="terminal-username"></span></p>
+                <p>> validating credentials...</p>
+            </div>
+            <div class="terminal-loading" id="terminal-loading-section">
+                <div class="loading-bar-container">
+                    <div class="loading-bar-fill"></div>
+                </div>
+            </div>
+            <div class="terminal-status" id="terminal-status-section" style="display: none;">
+                <p id="terminal-status-text">✓ authentication successful</p>
+            </div>
+            <div class="terminal-input-section" id="terminal-input-section" style="display: none;">
+                <p id="terminal-prompt">>></p>
+                <input 
+                    type="text" 
+                    id="terminal-input" 
+                    autocomplete="off"
+                    placeholder=""
+                    onkeypress="handleTerminalInput(event)"
+                >
+            </div>
+        </div>
+    </div>
+
+    <!-- Maus Package Manager Modal -->
+    <div id="maus-pm-modal" class="hidden">
+        <div class="terminal-window">
+            <div class="terminal-text" id="maus-terminal-content">
+                <p style="color: #00ff00;">╔════════════════════════════════════╗</p>
+                <p style="color: #00ff00;">║         🐭 maus package manager    ║</p>
+                <p style="color: #00ff00;">║         v1.0.0 (heart edition)     ║</p>
+                <p style="color: #00ff00;">╚════════════════════════════════════╝</p>
+                <p style="color: #00ff00;">type 'help' for commands</p>
+            </div>
+            <div class="terminal-input-section" id="maus-input-section">
+                <p id="maus-prompt">[maus]$ </p>
+                <input 
+                    type="text" 
+                    id="maus-input" 
+                    autocomplete="off"
+                    placeholder=""
+                    onkeypress="handleMausInput(event)"
+                >
+            </div>
+        </div>
+    </div>
+    <div id="r-cli-modal" class="hidden">
+        <div class="terminal-window">
+            <div class="terminal-text" id="r-terminal-content">
+                <p>> library(love)</p>
+                <p style="color: #00ff00;">-- entering r environment --</p>
+                <p style="color: #00ff00;">type help() for commands</p>
+            </div>
+            <div class="terminal-input-section" id="r-input-section">
+                <p id="r-prompt">> </p>
+                <input 
+                    type="text" 
+                    id="r-input" 
+                    autocomplete="off"
+                    placeholder=""
+                    onkeypress="handleRInput(event)"
+                >
+            </div>
+        </div>
+    </div>
+    <div id="xp-error-modal" class="hidden">
+        <div class="xp-error-window">
+            <div class="xp-title-bar">
+                <span>mausbert.exe</span>
+                <button class="xp-close-btn" onclick="closeXPError()">×</button>
+            </div>
+            <div class="xp-error-content">
+                <div class="xp-error-icon">⚠️</div>
+                <div class="xp-error-text">
+                    <p><strong>error 404 mausbert.exe not found</strong></p>
+                    <p>the name you entered is not recognized.</p>
+                </div>
+            </div>
+            <div class="xp-error-buttons">
+                <button onclick="closeXPError()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating hearts background -->
+    <div id="hearts-container"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- ========== STATE 1: COUNTDOWN ========== -->
+        <div id="countdown-state">
+            <h1>a special surprise awaits</h1>
+            <p>something magical is coming...</p>
+            <div class="countdown-timer">
+                <div class="time-unit">
+                    <div id="days">0</div>
+                    <div class="time-label">Days</div>
+                </div>
+                <div class="time-unit">
+                    <div id="hours">0</div>
+                    <div class="time-label">Hours</div>
+                </div>
+                <div class="time-unit">
+                    <div id="minutes">0</div>
+                    <div class="time-label">Minutes</div>
+                </div>
+                <div class="time-unit">
+                    <div id="seconds">0</div>
+                    <div class="time-label">Seconds</div>
+                </div>
+            </div>
+            <div class="wait-message">wait for it...</div>
+        </div>
+
+        <!-- ========== STATE 2: SCAVENGER HUNT ========== -->
+        <div id="hunt-state">
+            <div id="levels-container">
+                <!-- Levels will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- ========== STATE 3: GRAND FINALE ========== -->
+        <div id="finale-state">
+            <div class="romantic-card">
+                <div class="card-title">my dearest</div>
+                <div class="card-letter" id="love-letter">
+                    <!-- [INSERT YOUR LOVE LETTER HERE] -->
+                    <!-- This is where your personal message goes. Replace this placeholder with your heartfelt message. -->
+                    <!-- You can use multiple paragraphs, and it will scroll if too long. -->
+                </div>
+                <button class="hug-button" onclick="sendVirtualHug()">send a virtual hug</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== CONFIGURATION SECTION ==========
+        // EDIT THIS SECTION WITH YOUR CUSTOM CONTENT
+
+        const CONFIG = {
+            // Set the reveal date and time (February 11, 2026, 10:00 AM - already passed for testing)
+            revealTime: new Date(2026, 1, 11, 10, 0, 0).getTime(),
+
+            // Levels configuration - Edit passwords and questions here
+            levels: [
+                {
+                    number: 1,
+                    question: "hi <3 wie heißt du",
+                    password: "maus" // Check if input includes "maus"
+                }
+            ],
+
+            // Love letter - Edit this with your personal message
+            loveLetter: `Dear [Name],
+
+I wanted to create something special for you this Valentine's Day. This scavenger hunt was designed with love, with each level representing a moment we share together.
+
+Through these questions, I hope you'll remember why you mean so much to me. You are my greatest treasure, my truest love, and my forever home.
+
+Thank you for being you. Thank you for choosing me.
+
+With all my love,
+[Your Name]`
+        };
+
+        // ========== END CONFIGURATION SECTION ==========
+
+        let currentLevel = 0;
+        let huntInitialized = false;
+        let rstudioInstalled = false;
+
+        // Initialize the page
+        function init() {
+            // Ensure modals are hidden on init
+            document.getElementById('xp-error-modal').classList.add('hidden');
+            document.getElementById('terminal-modal').classList.add('hidden');
+            
+            generateHearts();
+            updateState();
+            setInterval(updateState, 1000);
+            populateLoveLetter();
+        }
+
+        // Update state based on current time
+        function updateState() {
+            const now = new Date().getTime();
+            const timeLeft = CONFIG.revealTime - now;
+
+            if (timeLeft > 0) {
+                // State 1: Countdown
+                showCountdown(timeLeft);
+            } else {
+                // State 2 & 3: Hunt or Finale
+                hideCountdown();
+                if (currentLevel < CONFIG.levels.length) {
+                    showHunt();
+                } else {
+                    showFinale();
+                }
+            }
+        }
+
+        // Countdown logic
+        function showCountdown(timeLeft) {
+            document.getElementById('countdown-state').classList.add('active');
+            document.getElementById('hunt-state').classList.remove('active');
+            document.getElementById('finale-state').classList.remove('active');
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        function hideCountdown() {
+            document.getElementById('countdown-state').classList.remove('active');
+        }
+
+        // Hunt logic
+        function showHunt() {
+            document.getElementById('hunt-state').classList.add('active');
+            document.getElementById('finale-state').classList.remove('active');
+            if (!huntInitialized) {
+                renderLevel();
+                huntInitialized = true;
+            }
+        }
+
+        function renderLevel() {
+            const level = CONFIG.levels[currentLevel];
+            const container = document.getElementById('levels-container');
+            
+            // Special rendering for level 1 (name input only)
+            if (currentLevel === 0) {
+                container.innerHTML = `
+                    <div class="level-container">
+                        <div class="question">${level.question}</div>
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                id="password-input" 
+                                onkeypress="handleKeyPress(event)"
+                                autocomplete="off"
+                            >
+                            <div class="error-message" id="error-msg">error 404 mausbert.exe not found</div>
+                            <button onclick="checkPassword()">submit answer</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Regular level rendering
+                container.innerHTML = `
+                    <div class="level-container">
+                        <div class="level-indicator">level ${level.number} / ${CONFIG.levels.length}</div>
+                        <h2>level ${level.number}</h2>
+                        <div class="question">${level.question}</div>
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                id="password-input" 
+                                placeholder="enter your answer..." 
+                                onkeypress="handleKeyPress(event)"
+                                autocomplete="off"
+                            >
+                            <div class="error-message" id="error-msg">incorrect answer. try again!</div>
+                            <button onclick="checkPassword()">submit answer</button>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('password-input').focus();
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('password-input').value.toLowerCase().trim();
+            const currentLevelConfig = CONFIG.levels[currentLevel];
+            
+            let isCorrect = false;
+            
+            // Level 1: Check if input includes "maus"
+            if (currentLevel === 0) {
+                isCorrect = input.includes(currentLevelConfig.password.toLowerCase());
+            } else {
+                // Other levels: exact match
+                isCorrect = input === currentLevelConfig.password.toLowerCase();
+            }
+
+            if (isCorrect) {
+                // For level 1, show terminal animation first
+                if (currentLevel === 0) {
+                    showTerminalAuthentication(input);
+                } else {
+                    currentLevel++;
+                    if (currentLevel < CONFIG.levels.length) {
+                        transitionToNextLevel();
+                    } else {
+                        transitionToFinale();
+                    }
+                }
+            } else {
+                showError();
+            }
+        }
+
+        function showTerminalAuthentication(username) {
+            // Show terminal modal
+            document.getElementById('terminal-modal').classList.remove('hidden');
+            document.getElementById('terminal-username').textContent = username;
+            
+            // After loading bar completes (2 seconds), show prompt
+            setTimeout(() => {
+                // Hide loading bar
+                document.getElementById('terminal-loading-section').style.display = 'none';
+                
+                // Show status
+                document.getElementById('terminal-status-section').style.display = 'block';
+                
+                // Show input section after 1 second
+                setTimeout(() => {
+                    document.getElementById('terminal-input-section').style.display = 'block';
+                    document.getElementById('terminal-input').focus();
+                }, 1000);
+            }, 2000);
+        }
+
+        function handleTerminalInput(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('terminal-input').value.toLowerCase().trim();
+                const content = document.getElementById('terminal-content');
+                
+                if (!input) {
+                    document.getElementById('terminal-input').value = '';
+                    return;
+                }
+                
+                // Add user input to terminal
+                const userLine = document.createElement('p');
+                userLine.textContent = '>> ' + input;
+                userLine.style.color = '#00ff00';
+                content.appendChild(userLine);
+                
+                // Process command
+                let response = '';
+                
+                if (input === 'help') {
+                    let helpText = `available commands:
+  help          - show this help message
+  whoami        - display current user
+  date          - show current date and time
+  clear         - clear terminal
+  maus          - open maus package manager`;
+                    if (rstudioInstalled) {
+                        helpText += `\n  r             - enter r environment`;
+                    }
+                    response = helpText;
+                } else if (input === 'whoami') {
+                    const username = document.getElementById('terminal-username').textContent;
+                    response = username;
+                } else if (input === 'date') {
+                    response = new Date().toString();
+                } else if (input === 'clear') {
+                    content.innerHTML = '';
+                    document.getElementById('terminal-input').value = '';
+                    content.parentElement.scrollTop = 0;
+                    return;
+                } else if (input === 'maus') {
+                    // Enter maus package manager
+                    document.getElementById('terminal-modal').classList.add('hidden');
+                    document.getElementById('maus-pm-modal').classList.remove('hidden');
+                    document.getElementById('maus-input').focus();
+                    return;
+                } else if (input === 'r') {
+                    if (rstudioInstalled) {
+                        // Enter R environment
+                        document.getElementById('terminal-modal').classList.add('hidden');
+                        document.getElementById('r-cli-modal').classList.remove('hidden');
+                        document.getElementById('r-input').focus();
+                        return;
+                    } else {
+                        response = `command not found: 'r'
+hint: you need to install rstudio first using 'maus'`;
+                    }
+                } else {
+                    response = `command not found: ${input}
+type 'help' for available commands`;
+                }
+                
+                // Add response
+                if (response) {
+                    const responseLine = document.createElement('p');
+                    responseLine.textContent = response;
+                    responseLine.style.color = '#00ff00';
+                    responseLine.style.whiteSpace = 'pre-wrap';
+                    content.appendChild(responseLine);
+                }
+                
+                // Clear input
+                document.getElementById('terminal-input').value = '';
+                
+                // Auto-scroll terminal
+                content.parentElement.scrollTop = content.parentElement.scrollHeight;
+            }
+        }
+
+        function handleMausInput(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('maus-input').value.toLowerCase().trim();
+                const content = document.getElementById('maus-terminal-content');
+                
+                if (!input) {
+                    document.getElementById('maus-input').value = '';
+                    return;
+                }
+                
+                // Add user input
+                const userLine = document.createElement('p');
+                userLine.textContent = '[maus]$ ' + input;
+                userLine.style.color = '#00ff00';
+                content.appendChild(userLine);
+                
+                // Process maus commands
+                let response = '';
+                let installStarted = false;
+                
+                if (input === 'help') {
+                    response = `╔═══════════════════════════════════════╗
+║  maus package manager - available commands
+├═══════════════════════════════════════┤
+║  help              - show this message
+║  list-packages     - see available packages
+║  install <pkg>    - install a package
+║  clue             - get a hint
+║  exit             - back to main terminal
+╚═══════════════════════════════════════╝`;
+                } else if (input === 'list-packages') {
+                    response = `available packages:
+  ► rstudio         - interactive data analysis environment
+  ► tidyverse       - data wrangling toolkit
+  ► ggplot2         - visualization library
+  ► love            - unlock special features (requires rstudio)`;
+                } else if (input.startsWith('install')) {
+                    const pkg = input.replace('install', '').trim();
+                    if (pkg === 'rstudio') {
+                        response = `installing rstudio...
+████████████████████████ 100%
+
+✓ rstudio installed successfully!
+launching rstudio...`;
+                        rstudioInstalled = true;
+                        installStarted = true;
+                    } else if (pkg === 'love') {
+                        response = `error: cannot install 'love' without 'rstudio'
+hint: try 'install rstudio' first`;
+                    } else if (pkg === '') {
+                        response = `error: please specify a package to install
+usage: install <package>
+try 'list-packages' to see available options`;
+                    } else {
+                        response = `error: package '${pkg}' not found
+try 'list-packages' to see what's available`;
+                    }
+                } else if (input === 'clue') {
+                    response = `💡 hint: if we could just install software to make sense of all this data...`;
+                } else if (input === 'exit' || input === 'quit()') {
+                    document.getElementById('maus-pm-modal').classList.add('hidden');
+                    document.getElementById('terminal-modal').classList.remove('hidden');
+                    document.getElementById('terminal-input').focus();
+                    return;
+                } else {
+                    response = `unknown command: '${input}'
+type 'help' for available commands`;
+                }
+                
+                // Add response
+                if (response) {
+                    const responseLine = document.createElement('p');
+                    responseLine.textContent = response;
+                    responseLine.style.color = '#00ff00';
+                    responseLine.style.whiteSpace = 'pre-wrap';
+                    responseLine.style.fontSize = '12px';
+                    content.appendChild(responseLine);
+                }
+                
+                // Clear input
+                document.getElementById('maus-input').value = '';
+                
+                // Auto-scroll
+                content.parentElement.scrollTop = content.parentElement.scrollHeight;
+                
+                // Launch R if rstudio was installed
+                if (installStarted) {
+                    setTimeout(() => {
+                        document.getElementById('maus-pm-modal').classList.add('hidden');
+                        document.getElementById('r-cli-modal').classList.remove('hidden');
+                        document.getElementById('r-input').focus();
+                    }, 1500);
+                }
+            }
+        }
+
+        function handleRInput(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('r-input').value.toLowerCase().trim();
+                const content = document.getElementById('r-terminal-content');
+                
+                if (!input) {
+                    document.getElementById('r-input').value = '';
+                    return;
+                }
+                
+                // Add user input
+                const userLine = document.createElement('p');
+                userLine.textContent = '> ' + input;
+                userLine.style.color = '#00ff00';
+                content.appendChild(userLine);
+                
+                // Process R commands
+                let response = '';
+                let shouldProgress = false;
+                
+                if (input === 'help()') {
+                    response = `[1] "available functions:"
+[1] "glm() - fit logistic regression model"
+[1] "data() - load sample relationship data"
+[1] "summary(model) - see model results"
+[1] "predict() - make predictions"
+[1] "reveal_love() - unlock the finale"`;
+                } else if (input === 'data()') {
+                    response = `data frame loaded: 'love_data'
+-- sample rows --
+  probability chance_of_love
+1        0.92            yes
+2        0.87            yes
+3        0.95            yes`;
+                } else if (input === 'glm(chance_of_love~., family=binomial)') {
+                    response = `call: glm(chance_of_love~., family=binomial)
+coefficients:
+(intercept)    -8.452
+probability    18.234
+
+null deviance: 83.178
+residual deviance: 0.002`;
+                } else if (input === 'summary(model)') {
+                    response = `call: glm(chance_of_love~., family=binomial)
+deviance residuals:
+     min       1q   median       3q      max
+ -0.0089  -0.0071  -0.0045   0.0064   0.0092
+
+coefficients:
+                estimate  std.error  z value  pr(>|z|)
+(intercept)     -8.4521     2.1203   -3.988    0.000067
+probability     18.2341     4.5632    3.995    0.000064`;
+                } else if (input === 'i_love_you()') {
+                    response = `[1] "you complete my model perfectly <3"`;
+                    shouldProgress = true;
+                } else if (input === 'quit()' || input === 'q()') {
+                    document.getElementById('r-cli-modal').classList.add('hidden');
+                    document.getElementById('terminal-modal').classList.remove('hidden');
+                    document.getElementById('terminal-input').focus();
+                    return;
+                } else {
+                    response = `error in eval(expr, envir, enclos) : object '${input}' not found
+type help() for available functions`;
+                }
+                
+                // Add response
+                if (response) {
+                    const responseLine = document.createElement('p');
+                    responseLine.textContent = response;
+                    responseLine.style.color = '#00ff00';
+                    responseLine.style.whiteSpace = 'pre-wrap';
+                    responseLine.style.fontSize = '12px';
+                    content.appendChild(responseLine);
+                }
+                
+                // Clear input
+                document.getElementById('r-input').value = '';
+                
+                // Auto-scroll
+                content.parentElement.scrollTop = content.parentElement.scrollHeight;
+                
+                // Progress to finale if unlock command used
+                if (shouldProgress) {
+                    setTimeout(() => {
+                        document.getElementById('r-cli-modal').classList.add('hidden');
+                        showFinale();
+                    }, 1000);
+                }
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        }
+
+        function showError() {
+            // Show XP error modal for level 1
+            if (currentLevel === 0) {
+                document.getElementById('xp-error-modal').classList.remove('hidden');
+            } else {
+                // Regular error for other levels
+                const errorMsg = document.getElementById('error-msg');
+                errorMsg.textContent = 'incorrect answer. try again!';
+                errorMsg.classList.add('show');
+                const input = document.getElementById('password-input');
+                input.classList.add('success-pulse');
+                setTimeout(() => {
+                    errorMsg.classList.remove('show');
+                    input.classList.remove('success-pulse');
+                }, 1500);
+            }
+        }
+
+        function closeXPError() {
+            document.getElementById('xp-error-modal').classList.add('hidden');
+            document.getElementById('password-input').focus();
+        }
+
+        function transitionToNextLevel() {
+            const container = document.getElementById('levels-container');
+            container.classList.add('fade-out');
+            setTimeout(() => {
+                currentLevel < CONFIG.levels.length && renderLevel();
+                container.classList.remove('fade-out');
+            }, 600);
+        }
+
+        function transitionToFinale() {
+            document.getElementById('hunt-state').classList.remove('active');
+            showFinale();
+        }
+
+        // Finale logic
+        function showFinale() {
+            document.getElementById('finale-state').classList.add('active');
+            triggerConfetti();
+        }
+
+        function populateLoveLetter() {
+            document.getElementById('love-letter').textContent = CONFIG.loveLetter;
+        }
+
+        function sendVirtualHug() {
+            alert('virtual hug sent!\n\nyou mean everything to me. happy valentine\'s day!');
+            triggerConfetti();
+        }
+
+        // Confetti effect
+        function triggerConfetti() {
+            const colors = ['#c9929d', '#d4a5b4', '#e8c8d0', '#fde7e7', '#fdf8f5'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti confetti-active';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.width = Math.random() * 15 + 5 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.animation = `confetti-fall ${Math.random() * 2 + 2}s ease-out forwards`;
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // Generate floating hearts, flaming hearts, and sparkles
+        function generateHearts() {
+            const container = document.getElementById('hearts-container');
+            const hearts = ['💕', '❤️‍🔥', '🍑', '🐭', '✨'];
+            
+            // Spawn gradually instead of all at once
+            let spawnCount = 0;
+            const spawnInterval = setInterval(() => {
+                if (spawnCount < 80) {
+                    createHeart(container, hearts);
+                    spawnCount++;
+                } else {
+                    clearInterval(spawnInterval);
+                }
+            }, 100);
+            
+            // Continuously spawn new hearts every 300ms
+            setInterval(() => {
+                createHeart(container, hearts);
+            }, 300);
+        }
+        
+        function createHeart(container, hearts) {
+            const heart = document.createElement('div');
+            heart.className = 'heart-float';
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+            
+            // Spawn from bottom of screen
+            const startX = Math.random() * window.innerWidth;
+            const startY = window.innerHeight + 20; // Slightly below viewport
+            heart.style.left = startX + 'px';
+            heart.style.top = startY + 'px';
+            
+            // Random animation duration between 6-12 seconds
+            const duration = Math.random() * 6 + 6;
+            heart.style.animationDuration = duration + 's';
+            
+            // Random size variation
+            const sizeVariation = Math.random() * 0.6 + 0.7;
+            heart.style.fontSize = (1.2 * sizeVariation) + 'rem';
+            
+            // Store position and velocity data
+            heart.dataset.startX = startX;
+            heart.dataset.startY = startY;
+            heart.dataset.duration = duration;
+            heart.dataset.velocityX = (Math.random() - 0.5) * 0.3; // Horizontal drift velocity
+            heart.dataset.velocityY = -1.2; // Upward velocity (faster to reach top)
+            heart.dataset.startTime = Date.now();
+            
+            container.appendChild(heart);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+        
+        // Mouse/Touch interaction - hearts react and move away
+        let interactionX = window.innerWidth / 2;
+        let interactionY = window.innerHeight / 2;
+        
+        // Mouse tracking
+        document.addEventListener('mousemove', (e) => {
+            interactionX = e.clientX;
+            interactionY = e.clientY;
+        });
+        
+        // Touch tracking for mobile
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                interactionX = e.touches[0].clientX;
+                interactionY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+        
+        // Update heart positions based on mouse
+        function updateHeartRepulsion() {
+            const hearts = document.querySelectorAll('.heart-float');
+            
+            hearts.forEach(heart => {
+                const startX = parseFloat(heart.dataset.startX);
+                const startY = parseFloat(heart.dataset.startY);
+                const duration = parseFloat(heart.dataset.duration);
+                const startTime = parseFloat(heart.dataset.startTime);
+                
+                const elapsed = (Date.now() - startTime) / 1000;
+                const progress = elapsed / duration;
+                
+                if (progress > 1) {
+                    return;
+                }
+                
+                let velocityX = parseFloat(heart.dataset.velocityX);
+                let velocityY = parseFloat(heart.dataset.velocityY);
+                
+                // Calculate current position
+                let currentX = startX + velocityX * elapsed * 80;
+                let currentY = startY + velocityY * elapsed * 80;
+                
+                // Distance to mouse/touch
+                const dx = currentX - interactionX;
+                const dy = currentY - interactionY;
+                const dist = Math.hypot(dx, dy);
+                const repelDistance = 220;
+                
+                if (dist < repelDistance && dist > 0) {
+                    // Calculate repulsion direction
+                    const angle = Math.atan2(dy, dx);
+                    const force = (repelDistance - dist) / repelDistance;
+                    
+                    // Modify velocity based on repulsion (change direction, not just position)
+                    const repelStrength = force * 1.5;
+                    velocityX += Math.cos(angle) * repelStrength * 0.015;
+                    velocityY += Math.sin(angle) * repelStrength * 0.015;
+                    
+                    // Store updated velocity
+                    heart.dataset.velocityX = velocityX;
+                    heart.dataset.velocityY = velocityY;
+                    
+                    // Recalculate position with new velocity
+                    currentX = startX + velocityX * elapsed * 80;
+                    currentY = startY + velocityY * elapsed * 80;
+                }
+                
+                const offsetX = currentX - startX;
+                const offsetY = currentY - startY;
+                
+                heart.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+            
+            requestAnimationFrame(updateHeartRepulsion);
+        }
+        
+        updateHeartRepulsion();
+
+        // Start the app
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
