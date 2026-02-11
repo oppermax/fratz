@@ -1362,17 +1362,20 @@ try 'maus help' for available commands`;
                     const username = document.getElementById('terminal-username').textContent;
                     response = username;
                 } else if (input === 'pwd') {
-                    response = '/home/' + document.getElementById('terminal-username').textContent + '/valentine';
+                    const username = document.getElementById('terminal-username').textContent;
+                    response = '/home/' + username + '/valentine';
                 } else if (input === 'ls' || input === 'ls -la' || input === 'dir') {
+                    const username = document.getElementById('terminal-username').textContent;
                     response = `total 3
-drwxr-xr-x  2 ${document.getElementById('terminal-username').textContent}  ${document.getElementById('terminal-username').textContent}  4096 Feb 14 12:00 .
-drwxr-xr-x  5 ${document.getElementById('terminal-username').textContent}  ${document.getElementById('terminal-username').textContent}  4096 Feb 14 11:30 ..
--rw-r--r--  1 ${document.getElementById('terminal-username').textContent}  ${document.getElementById('terminal-username').textContent}  1337 Feb 14 12:00 love_letter.txt
--rw-r--r--  1 ${document.getElementById('terminal-username').textContent}  ${document.getElementById('terminal-username').textContent}   420 Feb 14 11:45 heart_data.csv
+drwxr-xr-x  2 ${username}  ${username}  4096 Feb 14 12:00 .
+drwxr-xr-x  5 ${username}  ${username}  4096 Feb 14 11:30 ..
+-rw-r--r--  1 ${username}  ${username}  1337 Feb 14 12:00 love_letter.txt
+-rw-r--r--  1 ${username}  ${username}   420 Feb 14 11:45 heart_data.csv
 💕 romantic files detected!`;
                 } else if (input === 'uname' || input === 'uname -a') {
+                    const username = document.getElementById('terminal-username').textContent;
                     response = `LoveOS 14.2 Valentine-Edition x86_64
-Built with ❤️ for ${document.getElementById('terminal-username').textContent}`;
+Built with ❤️ for ${username}`;
                 } else if (input === 'date') {
                     response = new Date().toString();
                 } else if (input === 'clear') {
@@ -1477,7 +1480,7 @@ A romantic dataset with 5 observations of 3 variables:
 
 💕 Type summary(heart_data) to see the details!`;
                     responseClass = 'r-output';
-                } else if ((inputLower === 'summary(heart_data)' || inputLower === 'summary(heart_data)') && heartData) {
+                } else if (inputLower === 'summary(heart_data)' && heartData) {
                     rChallengeStep = Math.max(rChallengeStep, 2);
                     response = `     date             happiness    love_score
  "2024-02-14"     Min:   7.0    Min:   78.0
@@ -1489,7 +1492,7 @@ A romantic dataset with 5 observations of 3 variables:
 
 💡 Notice anything? Try plot_hearts() to visualize!`;
                     responseClass = 'r-output';
-                } else if ((inputLower === 'names(heart_data)' || inputLower === 'names(heart_data)') && heartData) {
+                } else if (inputLower === 'names(heart_data)' && heartData) {
                     response = `[1] "date"        "happiness"   "love_score"
 
 💡 Three variables capturing our journey together!`;
@@ -1643,6 +1646,11 @@ Type help() to see available functions`;
 
         // Finale logic
         function showFinale() {
+            // Hide other states
+            document.getElementById('hunt-state').classList.remove('active');
+            document.getElementById('countdown-state').classList.remove('active');
+            
+            // Show finale
             document.getElementById('finale-state').classList.add('active');
             triggerConfetti();
         }
