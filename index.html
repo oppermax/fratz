@@ -548,28 +548,38 @@
 
         .terminal-window {
             width: 90%;
-            max-width: 600px;
+            max-width: 700px;
             background: #001100;
             border: 3px solid #00ff00;
-            font-family: 'Courier New', monospace;
+            font-family: 'Courier New', 'Monaco', monospace;
             color: #00ff00;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8);
             text-shadow: 0 0 10px #00ff00;
-            max-height: 80vh;
+            max-height: 75vh;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .terminal-text {
-            font-size: 13px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
+            font-size: 12px;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            font-weight: 400;
+            flex-grow: 1;
+            overflow-y: auto;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         .terminal-text p {
-            margin: 8px 0;
+            margin: 0;
+            padding: 2px 0;
             color: #00ff00;
+            font-size: 12px;
         }
 
         .terminal-text .username {
@@ -578,16 +588,17 @@
         }
 
         .terminal-loading {
-            margin: 20px 0;
+            margin: 10px 0;
         }
 
         .loading-bar-container {
             width: 100%;
-            height: 20px;
-            border: 2px solid #00ff00;
+            height: 18px;
+            border: 1px solid #00ff00;
             background: #000;
             position: relative;
-            margin: 10px 0;
+            margin: 8px 0;
+            padding: 2px;
         }
 
         .loading-bar-fill {
@@ -604,7 +615,7 @@
         }
 
         .terminal-status {
-            margin-top: 15px;
+            margin-top: 10px;
             font-size: 12px;
             color: #00ff00;
             animation: blink 1s infinite;
@@ -616,27 +627,56 @@
         }
 
         .terminal-input-section {
-            margin-top: 15px;
+            margin-top: 10px;
             display: flex;
             align-items: center;
+            border-top: 1px solid #00330033;
+            padding-top: 10px;
+            flex-shrink: 0;
         }
 
-        #terminal-prompt {
+        #terminal-prompt,
+        #r-prompt,
+        #maus-prompt {
             color: #00ff00;
             margin: 0;
-            margin-right: 5px;
-            font-size: 13px;
+            margin-right: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
         }
 
-        #terminal-input {
+        #terminal-input,
+        #r-input,
+        #maus-input {
             flex: 1;
-            background: #001100 !important;
+            background: transparent !important;
             border: none !important;
             color: #00ff00 !important;
-            font-family: 'Courier New', monospace !important;
-            font-size: 13px !important;
+            font-family: 'Courier New', 'Monaco', monospace !important;
+            font-size: 12px !important;
             outline: none !important;
             padding: 0 !important;
+            font-weight: 400 !important;
+            caret-color: #00ff00 !important;
+        }
+
+        /* Scrollbar styling */
+        .terminal-text::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terminal-text::-webkit-scrollbar-track {
+            background: #001100;
+        }
+
+        .terminal-text::-webkit-scrollbar-thumb {
+            background: #00ff0055;
+            border-radius: 4px;
+        }
+
+        .terminal-text::-webkit-scrollbar-thumb:hover {
+            background: #00ff00;
         }
 
         .success-pulse {
@@ -1004,14 +1044,65 @@ With all my love,
                 
                 // Process command
                 let response = '';
+                let shouldEnter = false;
                 
-                if (input === 'help') {
+                // Check if it's a maus command
+                if (input.startsWith('maus')) {
+                    // Extract maus subcommand
+                    const mausArgs = input.replace('maus', '').trim().split(' ');
+                    const mausCmd = mausArgs[0] || '';
+                    const mausPkg = mausArgs.slice(1).join(' ');
+                    
+                    if (mausCmd === 'help' || mausCmd === '') {
+                        response = `maus - package manager (v1.0.0)
+
+usage: maus <command>
+
+commands:
+  help              - show this message
+  list-packages     - see available packages
+  install <pkg>    - install a package
+  clue             - get a hint`;
+                    } else if (mausCmd === 'list-packages') {
+                        response = `available packages:
+  ► rstudio         - interactive data analysis environment
+  ► tidyverse       - data wrangling toolkit
+  ► ggplot2         - visualization library
+  ► love            - unlock special features (requires rstudio)`;
+                    } else if (mausCmd === 'install') {
+                        const pkg = mausPkg || '';
+                        if (pkg === 'rstudio') {
+                            response = `installing rstudio...
+████████████████████████ 100%
+
+✓ rstudio installed successfully!`;
+                            rstudioInstalled = true;
+                            shouldEnter = true;
+                        } else if (pkg === 'love') {
+                            response = `error: cannot install 'love' without 'rstudio'
+hint: try 'maus install rstudio' first`;
+                        } else if (pkg === '') {
+                            response = `error: please specify a package to install
+usage: maus install <package>
+try 'maus list-packages' to see available options`;
+                        } else {
+                            response = `error: package '${pkg}' not found
+try 'maus list-packages' to see what's available`;
+                        }
+                    } else if (mausCmd === 'clue') {
+                        response = `💡 hint: if we could just install software to make sense of all this data...`;
+                    } else {
+                        response = `maus: unknown command '${mausCmd}'
+try 'maus help' for available commands`;
+                    }
+                } else if (input === 'help') {
                     let helpText = `available commands:
   help          - show this help message
   whoami        - display current user
   date          - show current date and time
   clear         - clear terminal
-  maus          - open maus package manager`;
+  clue          - get a hint
+  maus          - package manager (try 'maus help')`;
                     if (rstudioInstalled) {
                         helpText += `\n  r             - enter r environment`;
                     }
@@ -1026,12 +1117,6 @@ With all my love,
                     document.getElementById('terminal-input').value = '';
                     content.parentElement.scrollTop = 0;
                     return;
-                } else if (input === 'maus') {
-                    // Enter maus package manager
-                    document.getElementById('terminal-modal').classList.add('hidden');
-                    document.getElementById('maus-pm-modal').classList.remove('hidden');
-                    document.getElementById('maus-input').focus();
-                    return;
                 } else if (input === 'r') {
                     if (rstudioInstalled) {
                         // Enter R environment
@@ -1041,8 +1126,10 @@ With all my love,
                         return;
                     } else {
                         response = `command not found: 'r'
-hint: you need to install rstudio first using 'maus'`;
+hint: you need to install rstudio first using 'maus install rstudio'`;
                     }
+                } else if (input === 'clue') {
+                    response = `💡 hint: if we could just install software to make sense of all this data...`;
                 } else {
                     response = `command not found: ${input}
 type 'help' for available commands`;
@@ -1060,106 +1147,22 @@ type 'help' for available commands`;
                 // Clear input
                 document.getElementById('terminal-input').value = '';
                 
-                // Auto-scroll terminal
-                content.parentElement.scrollTop = content.parentElement.scrollHeight;
-            }
-        }
-
-        function handleMausInput(event) {
-            if (event.key === 'Enter') {
-                const input = document.getElementById('maus-input').value.toLowerCase().trim();
-                const content = document.getElementById('maus-terminal-content');
+                // Auto-scroll terminal to bottom
+                setTimeout(() => {
+                    content.scrollTop = content.scrollHeight;
+                }, 0);
                 
-                if (!input) {
-                    document.getElementById('maus-input').value = '';
-                    return;
-                }
-                
-                // Add user input
-                const userLine = document.createElement('p');
-                userLine.textContent = '[maus]$ ' + input;
-                userLine.style.color = '#00ff00';
-                content.appendChild(userLine);
-                
-                // Process maus commands
-                let response = '';
-                let installStarted = false;
-                
-                if (input === 'help') {
-                    response = `╔═══════════════════════════════════════╗
-║  maus package manager - available commands
-├═══════════════════════════════════════┤
-║  help              - show this message
-║  list-packages     - see available packages
-║  install <pkg>    - install a package
-║  clue             - get a hint
-║  exit             - back to main terminal
-╚═══════════════════════════════════════╝`;
-                } else if (input === 'list-packages') {
-                    response = `available packages:
-  ► rstudio         - interactive data analysis environment
-  ► tidyverse       - data wrangling toolkit
-  ► ggplot2         - visualization library
-  ► love            - unlock special features (requires rstudio)`;
-                } else if (input.startsWith('install')) {
-                    const pkg = input.replace('install', '').trim();
-                    if (pkg === 'rstudio') {
-                        response = `installing rstudio...
-████████████████████████ 100%
-
-✓ rstudio installed successfully!
-launching rstudio...`;
-                        rstudioInstalled = true;
-                        installStarted = true;
-                    } else if (pkg === 'love') {
-                        response = `error: cannot install 'love' without 'rstudio'
-hint: try 'install rstudio' first`;
-                    } else if (pkg === '') {
-                        response = `error: please specify a package to install
-usage: install <package>
-try 'list-packages' to see available options`;
-                    } else {
-                        response = `error: package '${pkg}' not found
-try 'list-packages' to see what's available`;
-                    }
-                } else if (input === 'clue') {
-                    response = `💡 hint: if we could just install software to make sense of all this data...`;
-                } else if (input === 'exit' || input === 'quit()') {
-                    document.getElementById('maus-pm-modal').classList.add('hidden');
-                    document.getElementById('terminal-modal').classList.remove('hidden');
-                    document.getElementById('terminal-input').focus();
-                    return;
-                } else {
-                    response = `unknown command: '${input}'
-type 'help' for available commands`;
-                }
-                
-                // Add response
-                if (response) {
-                    const responseLine = document.createElement('p');
-                    responseLine.textContent = response;
-                    responseLine.style.color = '#00ff00';
-                    responseLine.style.whiteSpace = 'pre-wrap';
-                    responseLine.style.fontSize = '12px';
-                    content.appendChild(responseLine);
-                }
-                
-                // Clear input
-                document.getElementById('maus-input').value = '';
-                
-                // Auto-scroll
-                content.parentElement.scrollTop = content.parentElement.scrollHeight;
-                
-                // Launch R if rstudio was installed
-                if (installStarted) {
+                // Handle R entry after rstudio install
+                if (shouldEnter) {
                     setTimeout(() => {
-                        document.getElementById('maus-pm-modal').classList.add('hidden');
+                        document.getElementById('terminal-modal').classList.add('hidden');
                         document.getElementById('r-cli-modal').classList.remove('hidden');
                         document.getElementById('r-input').focus();
                     }, 1500);
                 }
             }
         }
+
 
         function handleRInput(event) {
             if (event.key === 'Enter') {
@@ -1239,8 +1242,10 @@ type help() for available functions`;
                 // Clear input
                 document.getElementById('r-input').value = '';
                 
-                // Auto-scroll
-                content.parentElement.scrollTop = content.parentElement.scrollHeight;
+                // Auto-scroll to bottom
+                setTimeout(() => {
+                    content.scrollTop = content.scrollHeight;
+                }, 0);
                 
                 // Progress to finale if unlock command used
                 if (shouldProgress) {
